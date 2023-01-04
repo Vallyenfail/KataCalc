@@ -33,7 +33,7 @@ func CalcArabic(msg string) {
 		}
 		numbers[idx], _ = strconv.Atoi(word)
 	}
-	switch { // make negative results!
+	switch {
 	case words[1] == "+":
 		result = numbers[0] + numbers[2]
 	case words[1] == "-":
@@ -75,7 +75,27 @@ func CalcRom(msg string) {
 		9:  "IX",
 		10: "X",
 	}
+	RomDecimals := map[int]string{
+		10:  "X",
+		20:  "XX",
+		30:  "XXX",
+		40:  "XL",
+		50:  "L",
+		60:  "LX",
+		70:  "LXX",
+		80:  "LXXX",
+		90:  "XC",
+		100: "C",
+	}
 	words := strings.Fields(msg)
+	// if strings.ContainsAny(words[0], ".,/")
+	if _, err := strconv.Atoi(words[0]); err != nil {
+		fmt.Println("Check your input")
+		os.Exit(1)
+	} else if _, err := strconv.Atoi(words[2]); err != nil {
+		fmt.Println("Check your input")
+		os.Exit(1)
+	}
 	if len(words) != 3 {
 		fmt.Println("Check your input, must be a mistake")
 		os.Exit(1)
@@ -85,6 +105,7 @@ func CalcRom(msg string) {
 	for idx, word := range words {
 		numbers[idx] = RomToArab[word]
 	}
+	fmt.Println(numbers)
 	counter := 0
 	for _, zero := range numbers {
 		if zero == 0 { // if there are two zeroes then it's an error if there are three of them then proceed to arabic calc
@@ -112,12 +133,15 @@ func CalcRom(msg string) {
 			os.Exit(1)
 		}
 		switch {
-		case result > 10:
-			var result1 = "X" + ArabToRom[result-10]
+		case result > 10 && result%10 != 0:
+			var result1 = RomDecimals[result-result%10] + ArabToRom[result%10]
 			fmt.Println(result1)
-		case result <= 10 && result >= 0:
-			var result2 = ArabToRom[result]
+		case result > 10 && result/10 != 0:
+			var result2 = RomDecimals[result-result%10]
 			fmt.Println(result2)
+		case result <= 10 && result >= 0:
+			var result3 = ArabToRom[result]
+			fmt.Println(result3)
 		case result < 0:
 			fmt.Println("The result is below zero, I can't calculate it")
 			os.Exit(1)
