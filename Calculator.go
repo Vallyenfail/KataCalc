@@ -24,6 +24,13 @@ func main() {
 
 func CalcArabic(msg string) {
 	words := strings.Fields(msg)
+	if _, err := strconv.Atoi(words[0]); err != nil {
+		fmt.Println("Check your input")
+		os.Exit(1)
+	} else if _, err := strconv.Atoi(words[2]); err != nil {
+		fmt.Println("Check your input")
+		os.Exit(1)
+	}
 	result := 0
 	var numbers [3]int
 	for idx, word := range words {
@@ -71,7 +78,7 @@ func CalcRom(msg string) {
 		5:  "V",
 		6:  "VI",
 		7:  "VII",
-		8:  "VII",
+		8:  "VIII",
 		9:  "IX",
 		10: "X",
 	}
@@ -88,14 +95,6 @@ func CalcRom(msg string) {
 		100: "C",
 	}
 	words := strings.Fields(msg)
-	// if strings.ContainsAny(words[0], ".,/")
-	if _, err := strconv.Atoi(words[0]); err != nil {
-		fmt.Println("Check your input")
-		os.Exit(1)
-	} else if _, err := strconv.Atoi(words[2]); err != nil {
-		fmt.Println("Check your input")
-		os.Exit(1)
-	}
 	if len(words) != 3 {
 		fmt.Println("Check your input, must be a mistake")
 		os.Exit(1)
@@ -105,7 +104,6 @@ func CalcRom(msg string) {
 	for idx, word := range words {
 		numbers[idx] = RomToArab[word]
 	}
-	fmt.Println(numbers)
 	counter := 0
 	for _, zero := range numbers {
 		if zero == 0 { // if there are two zeroes then it's an error if there are three of them then proceed to arabic calc
